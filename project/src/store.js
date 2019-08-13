@@ -70,9 +70,11 @@ export default new Vuex.Store({
         return 10
       }
     },
-    typeList (state) {
-      const arr = [1, 2, 6, 7, 8, 10]
-      return state.typeData.filter(item => arr.includes(item.tid))
+    typeListIR (state) {
+      return state.typeData.filter(item => !item.rf)
+    },
+    typeListRF (state) {
+      return state.typeData.filter(item => item.rf)
     }
   },
   mutations: {
@@ -187,13 +189,17 @@ export default new Vuex.Store({
         /** 获取设备类型返回函数 **/
         getRCTypeResultCallback (res) {
           let data = parseHilinkData(res)
-          commit('setTypeData', data.result)
+          const numArr = [16, 17]
+          let allList  = JSON.parse(JSON.stringify(data.result))
+          console.log('所有类型', JSON.parse(JSON.stringify(data.result)))
+          let select = allList.filter(item => !numArr.includes(item.tid))
+          commit('setTypeData', select)
         }
       }
     },
     /** 获取设备类型数据 **/
-    getDevTypeList ({ commit, getters}) {
-      if (getters.typeList.length > 0) return
+    getDevTypeList ({ commit, state}) {
+      if (state.typeData.length > 0) return
       // $http.get('/huawei/l.php', {
       //   params: {
       //     m: 'live',

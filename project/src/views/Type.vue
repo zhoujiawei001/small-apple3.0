@@ -4,17 +4,35 @@
       style="background-color: #f2f2f2"
       :title="$t('type.select_dev')"
       @back-icon="$router.go(-1)"></appHeader2>
-    <main :style="styObj" class="wrapper">
-      <ul class="content">
-        <li
-          v-for="(item, i) in typeList"
-          :key="i"
-          :class="{removeRgBd: (i + 1)%3 === 0}"
-          @click="handleItem(item.tid)">
-          <img :src="require(`../assets/devIcon2/${item.tid}.png`)" alt="">
-          <p>{{$t(`pub.${typeName(item.tid)}`)}}</p>
-        </li>
-      </ul>
+    <main
+      :style="styObj"
+      class="wrapper">
+      <div class="content" v-show="typeData.length > 0">
+        <ul class="content_ul ul01">
+          <li>红外遥控设备</li>
+          <li
+            v-for="(item, i) in typeListIR"
+            :key="i"
+            :class="{removeRgBd: (i + 1)%3 === 0}"
+            @click="handleItem(item.tid)">
+            <img :src="require(`../assets/devIcon2/${item.tid}.png`)" alt="">
+            <p>{{$t(`pub.${typeName(item.tid)}`)}}</p>
+            <span>IR</span>
+          </li>
+        </ul>
+        <ul class="content_ul ul02">
+          <li>RF(433/315)射频遥控设备</li>
+          <li
+            v-for="(item, i) in typeListRF"
+            :key="i"
+            :class="{removeRgBd: (i + 1)%3 === 0}"
+            @click="handleItem(item.tid)">
+            <img :src="require(`../assets/devIcon2/${item.tid}.png`)" alt="">
+            <p>{{$t(`pub.${typeName(item.tid)}`)}}</p>
+            <span>RF</span>
+          </li>
+        </ul>
+      </div>
     </main>
     <transition name="fade">
       <appTipsBox :hintText="$t(`type.${hintText}`)" v-if="tipsBox" @handle-sure="tipsBox = false"></appTipsBox>
@@ -40,8 +58,8 @@ export default {
     }
   },
   computed: {
-    ...mapState(['statusBarHg', 'addedDevList']),
-    ...mapGetters(['screenRem', 'typeList']),
+    ...mapState(['statusBarHg', 'addedDevList', 'typeData']),
+    ...mapGetters(['screenRem', 'typeListIR', 'typeListRF']),
     styObj () {
       return {
         position: 'absolute',
@@ -62,10 +80,21 @@ export default {
         let obj = {
           1: 'set_box',
           2: 'tv',
+          3: 'dvd',
+          5: 'projector',
           6: 'fan',
           7: 'ac',
           8: 'light',
-          10: 'tv_box'
+          10: 'tv_box',
+          12: 'sweeper',
+          13: 'sound',
+          14: 'camera',
+          15: 'air_cleaner',
+          21: 'switch',
+          22: 'socket',
+          23: 'curtain',
+          24: 'clothes_hanger',
+          40: 'calorifier'
         }
         return obj[val]
       }
@@ -119,26 +148,53 @@ export default {
     .wrapper
       background-color $bgColorTheme
       .content
-        display flex
-        flex-wrap wrap
-        background-color $bgColorTheme
-        box-sizing border-box
-        border-top 1px solid $borderColor2
-        li
-          width calc(100% / 3)
-          height calc(100vw / 3)
-          border-right 1px solid $borderColor2
-          border-bottom 1px solid $borderColor2
-          box-sizing border-box
+        .content_ul
           display flex
-          align-items: center
-          justify-content center
-          flex-direction column
-          font-size 1.2rem
-          img
-            width 6.4rem
-          p
-            margin-top 1rem
-        .removeRgBd
-          border-right none
+          flex-wrap wrap
+          background-color $bgColorTheme
+          box-sizing border-box
+          border-top 1px solid $borderColor2
+          li
+            position relative
+            width calc(100% / 3)
+            height calc(100vw / 3)
+            border-right 1px solid $borderColor2
+            border-bottom 1px solid $borderColor2
+            box-sizing border-box
+            display flex
+            align-items: center
+            justify-content center
+            flex-direction column
+            font-size 1.2rem
+            img
+              width 6.4rem
+            p
+              margin-top 1rem
+            span
+              position absolute
+              top .5rem
+              right .5rem
+              width 2.4rem
+              height 1.2rem
+              font-size 1rem
+              color $fontColorHalfTrans
+              background-color: #fff;
+              text-align center
+              border-radius .2rem;
+          li:first-child
+            width 100%
+            background-color: #fff;
+            height 3.6rem;
+            font-size 1.4rem;
+          li:last-child
+            border-bottom none;
+          .removeRgBd
+            border-right none
+        .ul02
+          li:last-child
+            border-bottom 1px solid $borderColor2
+          li
+            span
+              color #fff;
+              background-color: $fontColorTheme;
 </style>
