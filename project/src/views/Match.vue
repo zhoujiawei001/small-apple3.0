@@ -102,6 +102,18 @@ export default {
                     if (data3.errcode === 0) {
                       let cloneList = JSON.parse(JSON.stringify(this.addedDevList))
                       cloneList.push(this.rc)
+                      console.log('roomName', this.roomName)
+                      console.log('devID', this.rc.devId)
+                      try {
+                        window.hilink.modifyDeviceRoomNameByDeviceId(this.rc.devId, this.roomName, 'app.modifyRoomCallback')
+                      } catch (e) {
+                        console.log(e)
+                      }
+                      window.hilink.modifyDeviceNameByDevId(
+                        this.rc.devId,
+                        this.$t(`pub.${this.typeName}`),
+                        'app.modifyDeviceNameByDevIdCallback2'
+                      )
                       this.$store.commit('setAddedDevList', cloneList)
                       this.$store.commit('setBrandScrollPos', 0) // 成功之后设置品牌页面滚动距离为O
                       this.$router.push('/')

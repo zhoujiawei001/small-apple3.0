@@ -14,9 +14,9 @@
             v-for="(item, i) in typeListIR"
             :key="i"
             :class="{removeRgBd: (i + 1)%3 === 0}"
-            @click="handleItem(item.tid)">
+            @click="handleItem(item)">
             <img :src="require(`../assets/devIcon2/${item.tid}.png`)" alt="">
-            <p>{{$t(`pub.${typeName(item.tid)}`)}}</p>
+            <p>{{$t(`pub.${typeName[item.tid]}`)}}</p>
             <span>IR</span>
           </li>
         </ul>
@@ -26,9 +26,9 @@
             v-for="(item, i) in typeListRF"
             :key="i"
             :class="{removeRgBd: (i + 1)%3 === 0}"
-            @click="handleItem(item.tid)">
+            @click="handleItem(item)">
             <img :src="require(`../assets/devIcon2/${item.tid}.png`)" alt="">
-            <p>{{$t(`pub.${typeName(item.tid)}`)}}</p>
+            <p>{{$t(`pub.${typeName[item.tid]}`)}}</p>
             <span>RF</span>
           </li>
         </ul>
@@ -58,7 +58,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['statusBarHg', 'addedDevList', 'typeData']),
+    ...mapState(['statusBarHg', 'addedDevList', 'typeData', 'typeName']),
     ...mapGetters(['screenRem', 'typeListIR', 'typeListRF']),
     styObj () {
       return {
@@ -75,30 +75,30 @@ export default {
     otherDevNum () {
       return this.addedDevList.length
     },
-    typeName () {
-      return val => {
-        let obj = {
-          1: 'set_box',
-          2: 'tv',
-          3: 'dvd',
-          5: 'projector',
-          6: 'fan',
-          7: 'ac',
-          8: 'light',
-          10: 'tv_box',
-          12: 'sweeper',
-          13: 'sound',
-          14: 'camera',
-          15: 'air_cleaner',
-          21: 'switch',
-          22: 'socket',
-          23: 'curtain',
-          24: 'clothes_hanger',
-          40: 'calorifier'
-        }
-        return obj[val]
-      }
-    }
+    // typeName () {
+    //   return val => {
+    //     let obj = {
+    //       1: 'set_box',
+    //       2: 'tv',
+    //       3: 'dvd',
+    //       5: 'projector',
+    //       6: 'fan',
+    //       7: 'ac',
+    //       8: 'light',
+    //       10: 'tv_box',
+    //       12: 'sweeper',
+    //       13: 'sound',
+    //       14: 'camera',
+    //       15: 'air_cleaner',
+    //       21: 'switch',
+    //       22: 'socket',
+    //       23: 'curtain',
+    //       24: 'clothes_hanger',
+    //       40: 'calorifier'
+    //     }
+    //     return obj[val]
+    //   }
+    // }
   },
   created () {
     this.$store.dispatch('getDevTypeList')
@@ -121,18 +121,20 @@ export default {
       })
       scroll.on('scroll', pos => {})
     },
-    handleItem (tid) {
+    handleItem (item) {
       if (this.otherDevNum >= 15) {
         this.hintText = 'dev_tips'
         this.tipsBox = true
-      } else if (tid === 7 && this.airIndexArr.length >= 2) {
+      } else if (item.tid === 7 && this.airIndexArr.length >= 2) {
         this.hintText = 'ac_tips'
         this.tipsBox = true
-      } else if (tid === 1) {
-        this.$store.commit('setTid', tid)
+      } else if (item.tid === 1) {
+        this.$store.commit('setTid', item.tid)
         this.$router.push('/operator')
       } else {
-        this.$store.commit('setTid', tid)
+        this.$store.commit('setTid', item.tid)
+        this.$store.commit('setIsRForIR', +item.rf)
+        console.log('item.rf',item.rf)
         this.$router.push('/brands')
       }
     }

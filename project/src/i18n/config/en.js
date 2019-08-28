@@ -32,7 +32,7 @@ const en = {
     boot: 'Boot'
   },
   dev_fan: {
-    speed: 'Speed',
+    fanspeed: 'Speed',
     mode: 'Mode',
     timer: 'Timer',
     oscillation: 'Oscillation'
@@ -97,6 +97,10 @@ const en = {
     socket: 'Socket',
     curtain: 'Curtain',
     clothes_hanger: 'Clothes Hanger',
+    satellite: 'Satellite TV',
+    cool: 'Air Cool',
+    fan_lamp: 'Fan Lamp',
+    lamp_control: 'Lamp Control',
     next: 'Next',
     match_leave: 'Matching, don\'t leave!',
     learn_leave: 'Learning, do\'t leave!',

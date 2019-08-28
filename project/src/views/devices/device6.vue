@@ -106,7 +106,7 @@
         fnList: [
           {
             text: '风速',
-            value: 'speed'
+            value: 'fanspeed'
           },
           {
             text: '模式',
@@ -150,8 +150,8 @@
     overflow-scrolling: touch
     .container
       position absolute
-      top: 28rem
-      height calc(100% - 28rem)
+      top: 25.2rem
+      height calc(100% - 25.2rem)
       width 100%
       padding-top 2.4rem
       overflow scroll

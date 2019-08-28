@@ -32,7 +32,7 @@ const zh = {
     boot: '主页'
   },
   dev_fan: {
-    speed: '风速',
+    fanspeed: '风速',
     mode: '模式',
     timer: '定时',
     oscillation: '摇头'
@@ -97,6 +97,10 @@ const zh = {
     socket: '插座',
     curtain: '窗帘',
     clothes_hanger: '晾衣架',
+    satellite: '卫星电视',
+    cool: '凉霸',
+    fan_lamp: '风扇灯',
+    lamp_control: '灯控制',
     next: '下一步',
     match_leave: '正在匹配，请勿离开!',
     learn_leave: '正在学习，请勿离开',

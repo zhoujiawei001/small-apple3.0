@@ -41,7 +41,7 @@ export const viewsMixin = {
         } else if (newVal === 3) {
           this.learnBoxText = this.$t('component.learn_txt4')
           this.learnStage = 0
-          window.hilink.toast('2', this.$t('component.failed'))
+          window.hilink.toast('2', this.$t('component.learn_failed'))
         }
         this.isLearn = false
         clearInterval(this.learnTimeoutTimer)
@@ -64,6 +64,18 @@ export const viewsMixin = {
                     if (data3.errcode === 0) {
                       let cloneList = JSON.parse(JSON.stringify(this.addedDevList))
                       cloneList.push(this.rc2)
+                      console.log('devId', this.rc2.devId);
+                      console.log('roomName', this.roomName);
+                      try {
+                        window.hilink.modifyDeviceRoomNameByDeviceId(this.rc2.devId, this.roomName, 'app.modifyRoomCallback')
+                      } catch (e) {
+                        console.log(e)
+                      }
+                      window.hilink.modifyDeviceNameByDevId(
+                        this.rc2.devId,
+                        this.$t(`pub.${this.typesName}`),
+                        'app.modifyDeviceNameByDevIdCallback2'
+                      )
                       this.$store.commit('setAddedDevList', cloneList)
                       this.$store.commit('setBrandScrollPos', 0) // 成功之后设置品牌页面滚动距离为O
                       this.$router.push('/')

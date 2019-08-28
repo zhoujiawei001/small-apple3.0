@@ -104,8 +104,8 @@
    overflow-scrolling: touch
    .container
      position absolute
-     top: 28rem
-     height calc(100% - 28rem)
+     top: 25.2rem
+     height calc(100% - 25.2rem)
      width 100%
      padding 2.4rem 1.6rem 0 1.6rem
      overflow scroll

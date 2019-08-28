@@ -10,21 +10,38 @@
 </template>
 
 <script>
+import {mapState} from 'vuex'
 export default {
   name: 'brandListItem',
   props: ['title', 'itemArr'],
+  computed: {
+    ...mapState(['isRForIR', 'tid'])
+  },
   methods: {
     goToMatch (item) {
       this.$store.commit('setBid', item.bid)
       setTimeout(() => {
-        this.$router.push({
-          path: '/match',
-          query: {
-            bid: item.bid,
-            zh: item.zh,
-            en: item.en
-          }
-        })
+        if (this.isRForIR) {
+          this.$router.push({
+            path: `/device${this.tid}`,
+            query: {
+              zh: item.zh,
+              en: item.en,
+              rc: {
+                pageType: 'learnPage'
+              }
+            }
+          })
+        } else {
+          this.$router.push({
+            path: '/match',
+            query: {
+              bid: item.bid,
+              zh: item.zh,
+              en: item.en
+            }
+          })
+        }
       }, 200)
     }
   }

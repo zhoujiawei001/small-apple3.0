@@ -43,14 +43,40 @@ export default new Vuex.Store({
       }
     ],
     controlKey: {
-      feedKey: 0
+      feedKey: 0,
+      rfKey: 0
     }, // 学习返回码 0-学习失败/超时， 1-开始学习，2-学习成功
     secondListTotal: '--', // 二级匹配总数
     secondList: [],// 二级匹配rid集合
     proIndex: 18, // 省的位置
     citiesIndex: 14, // 市的位置
     operatorIndex: 0, // 运营商的位置
-    lang: window.navigator.language.split('-')[0] || 'zh'
+    lang: window.navigator.language.split('-')[0] || 'zh',
+    isRForIR: 0, // 判断是红外还是射频设备？0-红外，1-射频
+    typeName: {
+      1: 'set_box',
+      2: 'tv',
+      3: 'dvd',
+      5: 'projector',
+      6: 'fan',
+      7: 'ac',
+      8: 'light',
+      10: 'tv_box',
+      11: 'satellite',
+      12: 'sweeper',
+      13: 'sound',
+      14: 'camera',
+      15: 'air_cleaner',
+      21: 'switch',
+      22: 'socket',
+      23: 'curtain',
+      24: 'clothes_hanger',
+      25: 'lamp_control',
+      38: 'fan_lamp',
+      40: 'calorifier',
+      41: 'cool',
+      42: 'fan'
+    }
     // lang: 'en'
   },
   getters: {
@@ -71,13 +97,16 @@ export default new Vuex.Store({
       }
     },
     typeListIR (state) {
-      return state.typeData.filter(item => !item.rf)
+      return state.typeData.filter(item => !+item.rf)
     },
     typeListRF (state) {
-      return state.typeData.filter(item => item.rf)
+      return state.typeData.filter(item => +item.rf)
     }
   },
   mutations: {
+    setIsRForIR (state, payload) {
+      state.isRForIR = payload
+    },
     setProIndex (state, payload) {
       state.proIndex = payload
     },
@@ -145,7 +174,7 @@ export default new Vuex.Store({
       window.deviceEventCallback = res => {
         let data = parseHilinkData(res)
         window.app.changeSerData(data)
-        console.log('设备上报', data)
+        console.log('设备上报', JSON.parse(JSON.stringify(data)))
         console.log('123')
       }
       window.app = {
@@ -153,7 +182,7 @@ export default new Vuex.Store({
           let data = parseHilinkData(res)
           state.appDevId = data.devId
           commit('setDevName', data.devName)
-          commit('setRoomName', `(${data.roomName})`)
+          commit('setRoomName', data.roomName)
           console.log('状态全集', data)
           data.services.forEach(item => {
             window.app.changeSerData(item)
@@ -194,6 +223,14 @@ export default new Vuex.Store({
           console.log('所有类型', JSON.parse(JSON.stringify(data.result)))
           let select = allList.filter(item => !numArr.includes(item.tid))
           commit('setTypeData', select)
+        },
+        /** 修改房间名 **/
+        modifyRoomCallback (res) {
+          console.log('modifyRoomCallback', res)
+        },
+        /** 修改名称回调 **/
+        modifyDeviceNameByDevIdCallback2 (res) {
+          console.log('modifyDeviceNameByDevIdCallback2', res)
         }
       }
     },
@@ -211,7 +248,7 @@ export default new Vuex.Store({
       // })
 
       let reqParams = {
-        domain: 'http://hwh5.yaokantv.com',
+        domain: 'http://hwapi.yaokantv.com',
         path: '/huawei/l.php',
         method: 'GET',
         param: {
@@ -464,6 +501,30 @@ export default new Vuex.Store({
           resolve(data)
         }
         window.hilink.requestThirdPartConfig(JSON.stringify(reqParams), 'getACFnListResultCallback')
+      })
+    },
+    /**
+     * 获取品牌射频设备code
+     * **/
+    getBrandRfCode ({commit, state}) {
+      console.log(state.tid, state.bid)
+      return new Promise(resolve => {
+        let reqParams = {
+          domain: 'http://hwapi.yaokantv.com',
+          path: `/huawei/l.php?c=rf_rule&be_rc_type=${state.tid}&bid=${state.bid}`,
+          method: 'POST',
+          param: {
+            c: 'rf_rule',
+            be_rc_type: state.tid,
+            bid: state.bid
+          }
+        }
+        window.getBrandRfCode = res => {
+          let data = parseHilinkData(res)
+          console.log('getBrandRfCode', data)
+          resolve(data)
+        }
+        window.hilink.requestThirdPartConfig(JSON.stringify(reqParams), 'getBrandRfCode')
       })
     }
   }

@@ -68,7 +68,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['statusBarHg', 'brandScrollPos', 'tid', 'lang']),
+    ...mapState(['statusBarHg', 'brandScrollPos', 'tid', 'lang', 'isRForIR']),
     ...mapGetters(['screenRem']),
     styObj () {
       return {
@@ -116,13 +116,18 @@ export default {
     /** 格式化初始数据 **/
     dataFormatting (originalData) {
       this.originalList = JSON.parse(JSON.stringify(originalData))
-      if (this.tid === 40) {
-        this.originalList = this.originalList.map(item => {
-          item.common = 1
-          return item
-        })
+      // if (this.tid === 400) {
+      //   this.originalList = this.originalList.map(item => {
+      //     item.common = 1
+      //     return item
+      //   })
+      // }
+      let comList = this.originalList.filter(item => item.common === 1)
+      if (comList.length > 0) {
+        this.listData.com = this.originalList.filter(item => item.common === 1)
+      } else {
+        this.listData.com = this.originalList.slice(0, 7)
       }
-      this.listData.com = this.originalList.filter(item => item.common === 1)
       console.log('lang', this.lang)
       this.letterArr.forEach(key => {
         this.listData[key] = this.originalList.filter(item => this.lang === 'en'? item.en.slice(0, 1).toUpperCase() === key : item.sort_index.toUpperCase() === key)
@@ -186,14 +191,25 @@ export default {
     goToMatch2 (item) {
       this.$store.commit('setBid', item.bid)
       setTimeout(() => {
-        this.$router.push({
-          path: '/match',
-          query: {
-            bid: item.bid,
-            zh: item.zh,
-            en: item.en
-          }
-        })
+        console.log('isRForIR',this.isRForIR)
+        if (this.isRForIR) {
+          this.$router.push({
+            path: `/device${this.tid}`,
+            query: {
+              zh: item.zh,
+              en: item.en
+            }
+          })
+        } else {
+          this.$router.push({
+            path: '/match',
+            query: {
+              bid: item.bid,
+              zh: item.zh,
+              en: item.en
+            }
+          })
+        }
       }, 200)
     }
   }

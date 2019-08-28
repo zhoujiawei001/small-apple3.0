@@ -17,10 +17,10 @@
 <style scoped lang="stylus">
   @import "../style/mixin.styl"
   .appBanner
-    setWH(100%, 28rem)
+    setWH(100%, 25.2rem)
     setPosUseFlex()
     imgUrl("../assets/background.png")
     img
-      setWH(20rem, 20rem)
+      setWH(18rem, 18rem)
       transform translateY(1.8rem)
 </style>
